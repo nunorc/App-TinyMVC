@@ -1,0 +1,15 @@
+controllers:
+  index:
+    view:
+      expire: 5
+      args: 0
+  test:
+    test:
+      expire: 5
+      args: 0
+templates:
+  dir: 'lib/App/TinyMVC/Templates'
+cache:
+  enabled: 0
+log:
+  enabled: 0
