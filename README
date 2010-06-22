@@ -1,6 +1,7 @@
 App-TinyMVC
 
-App::TinyMVC is a module that implements a Model-View-Controller ...
+App::TinyMVC is a module that implements a simple Model-View-Controller 
+implementation to deploy web content.
 
 
 INSTALLATION

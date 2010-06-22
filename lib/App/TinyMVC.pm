@@ -39,6 +39,7 @@ our $VERSION = '0.01_2';
       args => [@args],
       context => {
         params => {...},
+        ...
       }
     );
 
@@ -110,6 +111,7 @@ sub process {
 
 	# create new controller instance
 	my $contName = "App::TinyMVC::Controller::".ucfirst($self->controller);
+	eval "use $contName";
 	my $controller = $contName->new; # XXX
 
 	# let controller decide cache type and cache id

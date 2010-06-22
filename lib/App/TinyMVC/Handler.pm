@@ -13,11 +13,7 @@ use App::TinyMVC::Controller::Index;
 use App::TinyMVC::Controller::Test;
 use Template;
 
-{
-	package App::TinyMVC;
-
-	$App::TinyMVC::CONFDIR = '/home/smash/playground/App-TinyMVC/config';
-}
+$App::TinyMVC::CONFDIR = '/home/smash/playground/App-TinyMVC/config';
 
 sub handler {
 	my $r = shift;
