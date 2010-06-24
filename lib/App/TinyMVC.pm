@@ -12,10 +12,12 @@ use constant {
 
 use App::TinyMVC::Cache;
 use App::TinyMVC::Scheduler;
-use Data::Dumper;
+use App::TinyMVC::Controller::Template;
 use YAML::AppConfig;
 use Template;
 use Template::Constants;
+use File::Slurp qw/slurp/;
+use Data::Dumper;
 
 =head1 NAME
 
@@ -109,9 +111,27 @@ sub process {
 	#	return "ERRO";
 	#}
 
+	# build new controller and eval
+	my $controller_tt = Template->new();
+	my $tt = App::TinyMVC::Controller::Template->dump;
+	my $source = slurp('/Users/smash/playground/App-TinyMVC/lib/App/TinyMVC/Controller/'.$self->controller);
+	my $functions = {};
+	while ($source =~ /ACTION\s+(\w[\w\d\_]+)\s+(.*?)\s+RETURNS\s+(.*?);/gs) {
+   	$functions->{$1}->{'source'} = $2;
+   	$functions->{$1}->{'returns'} = [split /,/, $3];
+	}
+	my $vars = {
+      	name => ucfirst $self->controller,
+      	functions => $functions,
+   	};
+	my $code;
+	$controller_tt->process(\$tt, $vars, \$code);
+#print "BEGIN\n$code\nEND\n";
+	eval $code;
+
 	# create new controller instance
 	my $contName = "App::TinyMVC::Controller::".ucfirst($self->controller);
-	eval "use $contName";
+	#eval "use $contName";
 	my $controller = $contName->new; # XXX
 
 	# let controller decide cache type and cache id
@@ -192,7 +212,7 @@ sub process {
 	#$self->log('info','calling template '.$vars->{'template'});
 
 	# handle stash and some needed stuff for templates
-	my $vars = $self->{'stash'};
+	$vars = $self->{'stash'};
 	if ($self->{'context'}) {
 		$vars->{'context'} = $self->{'context'};
 	}

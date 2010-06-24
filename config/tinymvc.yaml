@@ -1,4 +1,5 @@
 controllers:
+  dir: '/Users/smash/playground/App-TinyMVC/lib/App/TinyMVC/Controllers'
   index:
     view:
       expire: 5

@@ -1,0 +1,15 @@
+ACTION index
+	my $date = localtime;
+RETURNS date;
+
+ACTION test
+	my $string = 'hello world';
+	if (@{$tinymvc->args}) {
+		$string = 'got '.join ' ', @{$tinymvc->args};
+	}
+RETURNS string;
+
+ACTION one
+	sleep 10;
+	my $string = 'the one';
+RETURNS string;

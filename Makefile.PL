@@ -15,6 +15,7 @@ WriteMakefile(
         'Template::Constants' => 0,
         'Cache::Memcached' => 0,
         'String::CRC32' => 0,
+        'File::Slurp' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'App-TinyMVC-*' },
