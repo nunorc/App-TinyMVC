@@ -13,6 +13,7 @@ use constant {
 use App::TinyMVC::Cache;
 use App::TinyMVC::Scheduler;
 use App::TinyMVC::Controller::Template;
+
 use YAML::AppConfig;
 use Template;
 use Template::Constants;
@@ -25,7 +26,7 @@ App::TinyMVC - A lightweight MVC framework for dynamic content
 
 =head1 VERSION
 
-Version 0.01
+Version 0.01_2
 
 =cut
 
@@ -96,9 +97,7 @@ Process requested action from a controller.
 =cut
 
 sub process {
-
 	my $self = shift;
-
 	$self->log('info',"App::TinyMVC::process() entering..");
 
 	my $output;
@@ -111,28 +110,29 @@ sub process {
 	#	return "ERRO";
 	#}
 
-	# build new controller and eval
-	my $controller_tt = Template->new();
-	my $tt = App::TinyMVC::Controller::Template->dump;
-	my $source = slurp('/Users/smash/playground/App-TinyMVC/lib/App/TinyMVC/Controller/'.$self->controller);
-	my $functions = {};
-	while ($source =~ /ACTION\s+(\w[\w\d\_]+)\s+(.*?)\s+RETURNS\s+(.*?);/gs) {
-   	$functions->{$1}->{'source'} = $2;
-   	$functions->{$1}->{'returns'} = [split /,/, $3];
-	}
-	my $vars = {
-      	name => ucfirst $self->controller,
-      	functions => $functions,
-   	};
-	my $code;
-	$controller_tt->process(\$tt, $vars, \$code);
-#print "BEGIN\n$code\nEND\n";
-	eval $code;
-
 	# create new controller instance
 	my $contName = "App::TinyMVC::Controller::".ucfirst($self->controller);
-	#eval "use $contName";
+	eval "use $contName";
+	if ($@) {
+		# build new controller module and eval
+		my $controller_tt = Template->new();
+		my $tt = App::TinyMVC::Controller::Template->dump;
+		my $source = slurp($self->{'config'}->{'controllers'}->{'dir'}.'/'.$self->controller);
+		my $functions = {};
+		while ($source =~ /ACTION\s+(\w[\w\d\_]+)\s+(.*?)\s+RETURNS\s+(.*?);/gs) {
+   		$functions->{$1}->{'source'} = $2;
+   		$functions->{$1}->{'returns'} = [split /,/, $3];
+		}
+		my $vars = {
+      		name => ucfirst $self->controller,
+      		functions => $functions,
+   		};
+		my $code;
+		$controller_tt->process(\$tt, $vars, \$code);
+		eval $code;
+	}
 	my $controller = $contName->new; # XXX
+
 
 	# let controller decide cache type and cache id
 	# also let controller validate args if needed
@@ -212,7 +212,7 @@ sub process {
 	#$self->log('info','calling template '.$vars->{'template'});
 
 	# handle stash and some needed stuff for templates
-	$vars = $self->{'stash'};
+	my $vars = $self->{'stash'};
 	if ($self->{'context'}) {
 		$vars->{'context'} = $self->{'context'};
 	}

@@ -3,7 +3,6 @@
 use Test::More tests => 6;
 
 use App::TinyMVC;
-use App::TinyMVC::Controller::Test;
 
 $App::TinyMVC::CONFDIR = 'config';
 

@@ -1,5 +1,5 @@
 controllers:
-  dir: '/Users/smash/playground/App-TinyMVC/lib/App/TinyMVC/Controllers'
+  dir: 'lib/App/TinyMVC/Controller'
   index:
     view:
       expire: 5
@@ -10,7 +10,7 @@ controllers:
       args: 0
 
 templates:
-  dir: '/Users/smash/playground/App-TinyMVC/lib/App/TinyMVC/Templates'
+  dir: 'lib/App/TinyMVC/Templates'
 
 cache:
   enabled: 0
