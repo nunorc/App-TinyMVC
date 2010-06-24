@@ -3,7 +3,7 @@ App-TinyMVC
 App::TinyMVC is a module that implements a simple Model-View-Controller 
 framework to deploy web content. This is not a full featured MVC
 framework, if your are looking for a fully featured MVC framework
-take a loot at Catalyst and similar projects.
+take a look at Catalyst and similar projects.
 
 
 INSTALLATION
